@@ -1,8 +1,7 @@
-# hello-world
 This was the description about my mini c project.
                                              SNAKE GAME IN C PROGRAMMING
 My mini c project is playing snake game by using the c programming.In which by using this code we can be able to play snake game in computer by  using this code instead of using mobile and tab.By running this code,it will first give the instructions to play the game and the loading process is done after loading by pressing any key the game starts.By moving the arrows left,right,up and down.The snakes eats the food(alphabet) and grows.There wre totally three life for snake.If the snake body touches the outer bpundary or if the snake touches its own body it will lose a life.Incase if three lifes were used then the game will come to end and we want to run the code again to play the game.
-code:
+code
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
