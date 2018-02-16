@@ -1,0 +1,535 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Msftedit 5.41.21.2509;}\viewkind4\uc1\pard\sa200\sl276\slmult1\lang9\f0\fs22 #include <stdio.h>\par
+#include <time.h>\par
+#include <stdlib.h>\par
+#include <conio.h>\par
+#include<time.h>\par
+#include<ctype.h>\par
+#include <time.h>\par
+#include <windows.h>\par
+#include <process.h>\par
+\par
+#define UP 72\par
+#define DOWN 80\par
+#define LEFT 75\par
+#define RIGHT 77\par
+\par
+int length;\par
+int bend_no;\par
+int len;\par
+char key;\par
+void record();\par
+void load();\par
+int life;\par
+void Delay(long double);\par
+void Move();\par
+void Food();\par
+int Score();\par
+void Print();\par
+void gotoxy(int x, int y);\par
+void GotoXY(int x,int y);\par
+void Bend();\par
+void Boarder();\par
+void Down();\par
+void Left();\par
+void Up();\par
+void Right();\par
+void ExitGame();\par
+int Scoreonly();\par
+\par
+struct coordinate\{\par
+    int x;\par
+    int y;\par
+    int direction;\par
+\};\par
+\par
+typedef struct coordinate coordinate;\par
+\par
+coordinate head, bend[500],food,body[30];\par
+\par
+int main()\par
+\{\par
+\par
+    char key;\par
+\par
+    Print();\par
+\par
+    system("cls");\par
+\par
+    load();\par
+\par
+    length=5;\par
+\par
+    head.x=25;\par
+\par
+    head.y=20;\par
+\par
+    head.direction=RIGHT;\par
+\par
+    Boarder();\par
+\par
+    Food(); //to generate food coordinates initially\par
+\par
+    life=3; //number of extra lives\par
+\par
+    bend[0]=head;\par
+\par
+    Move();   //initialing initial bend coordinate\par
+\par
+    return 0;\par
+\par
+\}\par
+\par
+void Move()\par
+\{\par
+    int a,i;\par
+\par
+    do\{\par
+\par
+        Food();\par
+        fflush(stdin);\par
+\par
+        len=0;\par
+\par
+        for(i=0;i<30;i++)\par
+\par
+        \{\par
+\par
+            body[i].x=0;\par
+\par
+            body[i].y=0;\par
+\par
+            if(i==length)\par
+\par
+            break;\par
+\par
+        \}\par
+\par
+        Delay(length);\par
+\par
+        Boarder();\par
+\par
+        if(head.direction==RIGHT)\par
+\par
+            Right();\par
+\par
+        else if(head.direction==LEFT)\par
+\par
+            Left();\par
+\par
+        else if(head.direction==DOWN)\par
+\par
+            Down();\par
+\par
+        else if(head.direction==UP)\par
+\par
+            Up();\par
+\par
+        ExitGame();\par
+\par
+    \}while(!kbhit());\par
+\par
+    a=getch();\par
+\par
+    if(a==27)\par
+\par
+    \{\par
+\par
+        system("cls");\par
+\par
+        exit(0);\par
+\par
+    \}\par
+    key=getch();\par
+\par
+    if((key==RIGHT&&head.direction!=LEFT&&head.direction!=RIGHT)||(key==LEFT&&head.direction!=RIGHT&&head.direction!=LEFT)||(key==UP&&head.direction!=DOWN&&head.direction!=UP)||(key==DOWN&&head.direction!=UP&&head.direction!=DOWN))\par
+\par
+    \{\par
+\par
+        bend_no++;\par
+\par
+        bend[bend_no]=head;\par
+\par
+        head.direction=key;\par
+\par
+        if(key==UP)\par
+\par
+            head.y--;\par
+\par
+        if(key==DOWN)\par
+\par
+            head.y++;\par
+\par
+        if(key==RIGHT)\par
+\par
+            head.x++;\par
+\par
+        if(key==LEFT)\par
+\par
+            head.x--;\par
+\par
+        Move();\par
+\par
+    \}\par
+\par
+    else if(key==27)\par
+\par
+    \{\par
+\par
+        system("cls");\par
+\par
+        exit(0);\par
+\par
+    \}\par
+\par
+    else\par
+\par
+    \{\par
+\par
+        printf("\\a");\par
+\par
+        Move();\par
+\par
+    \}\par
+\}\par
+\par
+void gotoxy(int x, int y)\par
+\{\par
+\par
+ COORD coord;\par
+\par
+ coord.X = x;\par
+\par
+ coord.Y = y;\par
+\par
+ SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);\par
+\par
+\}\par
+void GotoXY(int x, int y)\par
+\{\par
+    HANDLE a;\par
+    COORD b;\par
+    fflush(stdout);\par
+    b.X = x;\par
+    b.Y = y;\par
+    a = GetStdHandle(STD_OUTPUT_HANDLE);\par
+    SetConsoleCursorPosition(a,b);\par
+ \}\par
+void load()\{\par
+    int row,col,r,c,q;\par
+    gotoxy(36,14);\par
+    printf("loading...");\par
+    gotoxy(30,15);\par
+    for(r=1;r<=20;r++)\{\par
+    for(q=0;q<=100000000;q++);//to display the character slowly\par
+    printf("%c",177);\}\par
+    getch();\par
+\}\par
+void Down()\par
+\{\par
+    int i;\par
+    for(i=0;i<=(head.y-bend[bend_no].y)&&len<length;i++)\par
+    \{\par
+        GotoXY(head.x,head.y-i);\par
+        \{\par
+            if(len==0)\par
+                printf("v");\par
+            else\par
+                printf("*");\par
+        \}\par
+        body[len].x=head.x;\par
+        body[len].y=head.y-i;\par
+        len++;\par
+    \}\par
+    Bend();\par
+    if(!kbhit())\par
+        head.y++;\par
+\}\par
+void Delay(long double k)\par
+\{\par
+    Score();\par
+    long double i;\par
+    for(i=0;i<=(10000000);i++);\par
+\}\par
+void ExitGame()\par
+\{\par
+    int i,check=0;\par
+    for(i=4;i<length;i++)   //starts with 4 because it needs minimum 4 element to touch its own body\par
+    \{\par
+        if(body[0].x==body[i].x&&body[0].y==body[i].y)\par
+        \{\par
+            check++;    //check's value increases as the coordinates of head is equal to any other body coordinate\par
+        \}\par
+        if(i==length||check!=0)\par
+            break;\par
+    \}\par
+    if(head.x<=10||head.x>=70||head.y<=10||head.y>=30||check!=0)\par
+    \{\par
+        life--;\par
+        if(life>=0)\par
+        \{\par
+            head.x=25;\par
+            head.y=20;\par
+            bend_no=0;\par
+            head.direction=RIGHT;\par
+            Move();\par
+        \}\par
+        else\par
+        \{\par
+            system("cls");\par
+            printf("All lives completed\\nBetter Luck Next Time!!!\\nPress any key to quit the game\\n");\par
+            record();\par
+            exit(0);\par
+        \}\par
+    \}\par
+\}\par
+void Food()\par
+\{\par
+    if(head.x==food.x&&head.y==food.y)\par
+    \{\par
+        length++;\par
+        time_t a;\par
+        a=time(0);\par
+        srand(a);\par
+        food.x=rand()%70;\par
+        if(food.x<=10)\par
+            food.x+=11;\par
+        food.y=rand()%30;\par
+        if(food.y<=10)\par
+\par
+            food.y+=11;\par
+    \}\par
+    else if(food.x==0)/*to create food for the first time coz global variable are initialized with 0*/\par
+    \{\par
+        food.x=rand()%70;\par
+        if(food.x<=10)\par
+            food.x+=11;\par
+        food.y=rand()%30;\par
+        if(food.y<=10)\par
+            food.y+=11;\par
+    \}\par
+\}\par
+void Left()\par
+\{\par
+    int i;\par
+    for(i=0;i<=(bend[bend_no].x-head.x)&&len<length;i++)\par
+    \{\par
+        GotoXY((head.x+i),head.y);\par
+       \{\par
+                if(len==0)\par
+                    printf("<");\par
+                else\par
+                    printf("*");\par
+        \}\par
+        body[len].x=head.x+i;\par
+        body[len].y=head.y;\par
+        len++;\par
+    \}\par
+    Bend();\par
+    if(!kbhit())\par
+        head.x--;\par
+\par
+\}\par
+void Right()\par
+\{\par
+    int i;\par
+    for(i=0;i<=(head.x-bend[bend_no].x)&&len<length;i++)\par
+    \{\par
+        //GotoXY((head.x-i),head.y);\par
+        body[len].x=head.x-i;\par
+        body[len].y=head.y;\par
+        GotoXY(body[len].x,body[len].y);\par
+        \{\par
+            if(len==0)\par
+                printf(">");\par
+            else\par
+                printf("*");\par
+        \}\par
+        /*body[len].x=head.x-i;\par
+        body[len].y=head.y;*/\par
+        len++;\par
+    \}\par
+    Bend();\par
+    if(!kbhit())\par
+        head.x++;\par
+\}\par
+void Bend()\par
+\{\par
+    int i,j,diff;\par
+    for(i=bend_no;i>=0&&len<length;i--)\par
+    \{\par
+            if(bend[i].x==bend[i-1].x)\par
+            \{\par
+                diff=bend[i].y-bend[i-1].y;\par
+                if(diff<0)\par
+                    for(j=1;j<=(-diff);j++)\par
+                    \{\par
+                        body[len].x=bend[i].x;\par
+                        body[len].y=bend[i].y+j;\par
+                        GotoXY(body[len].x,body[len].y);\par
+                        printf("*");\par
+                        len++;\par
+                        if(len==length)\par
+                            break;\par
+                    \}\par
+                else if(diff>0)\par
+                    for(j=1;j<=diff;j++)\par
+                    \{\par
+                        /*GotoXY(bend[i].x,(bend[i].y-j));\par
+                        printf("*");*/\par
+                        body[len].x=bend[i].x;\par
+                        body[len].y=bend[i].y-j;\par
+                        GotoXY(body[len].x,body[len].y);\par
+                        printf("*");\par
+                        len++;\par
+                        if(len==length)\par
+                            break;\par
+                    \}\par
+            \}\par
+        else if(bend[i].y==bend[i-1].y)\par
+        \{\par
+            diff=bend[i].x-bend[i-1].x;\par
+            if(diff<0)\par
+                for(j=1;j<=(-diff)&&len<length;j++)\par
+                \{\par
+                    /*GotoXY((bend[i].x+j),bend[i].y);\par
+                    printf("*");*/\par
+                    body[len].x=bend[i].x+j;\par
+                    body[len].y=bend[i].y;\par
+                    GotoXY(body[len].x,body[len].y);\par
+                        printf("*");\par
+                   len++;\par
+                   if(len==length)\par
+                           break;\par
+               \}\par
+           else if(diff>0)\par
+               for(j=1;j<=diff&&len<length;j++)\par
+               \{\par
+                   /*GotoXY((bend[i].x-j),bend[i].y);\par
+                   printf("*");*/\par
+                   body[len].x=bend[i].x-j;\par
+                   body[len].y=bend[i].y;\par
+                   GotoXY(body[len].x,body[len].y);\par
+                       printf("*");\par
+                   len++;\par
+                   if(len==length)\par
+                       break;\par
+               \}\par
+       \}\par
+   \}\par
+\}\par
+void Boarder()\par
+\{\par
+   system("cls");\par
+   int i;\par
+   GotoXY(food.x,food.y);   /*displaying food*/\par
+       printf("F");\par
+   for(i=10;i<71;i++)\par
+   \{\par
+       GotoXY(i,10);\par
+           printf("!");\par
+       GotoXY(i,30);\par
+           printf("!");\par
+   \}\par
+   for(i=10;i<31;i++)\par
+   \{\par
+       GotoXY(10,i);\par
+           printf("!");\par
+       GotoXY(70,i);\par
+       printf("!");\par
+   \}\par
+\}\par
+void Print()\par
+\{\par
+   //GotoXY(10,12);\par
+   printf("\\tWelcome to the mini Snake game.(press any key to continue)\\n");\par
+  getch();\par
+   system("cls");\par
+   printf("\\tGame instructions:\\n");\par
+   printf("\\n-> Use arrow keys to move the snake.\\n\\n-> You will be provided foods at the several coordinates of the screen which you have to eat. Everytime you eat a food the length of the snake will be increased by 1 element and thus the score.\\n\\n-> Here you are provided with three lives. Your life will decrease as you hit the wall or snake's body.\\n\\n-> YOu can pause the game in its middle by pressing any key. To continue the paused game press any other key once again\\n\\n-> If you want to exit press esc. \\n");\par
+   printf("\\n\\nPress any key to play game...");\par
+   if(getch()==27)\par
+   exit(0);\par
+\}\par
+void record()\{\par
+   char plname[20],nplname[20],cha,c;\par
+   int i,j,px;\par
+   FILE *info;\par
+   info=fopen("record.txt","a+");\par
+   getch();\par
+   system("cls");\par
+   printf("Enter your name\\n");\par
+   scanf("%[^\\n]",plname);\par
+   //************************\par
+   for(j=0;plname[j]!='\\0';j++)\{ //to convert the first letter after space to capital\par
+   nplname[0]=toupper(plname[0]);\par
+   if(plname[j-1]==' ')\{\par
+   nplname[j]=toupper(plname[j]);\par
+   nplname[j-1]=plname[j-1];\}\par
+   else nplname[j]=plname[j];\par
+   \}\par
+   nplname[j]='\\0';\par
+   //*****************************\par
+   //sdfprintf(info,"\\t\\t\\tPlayers List\\n");\par
+   fprintf(info,"Player Name :%s\\n",nplname);\par
+    //for date and time\par
+\par
+   time_t mytime;\par
+  mytime = time(NULL);\par
+  fprintf(info,"Played Date:%s",ctime(&mytime));\par
+     //**************************\par
+     fprintf(info,"Score:%d\\n",px=Scoreonly());//call score to display score\par
+     //fprintf(info,"\\nLevel:%d\\n",10);//call level to display level\par
+   for(i=0;i<=50;i++)\par
+   fprintf(info,"%c",'_');\par
+   fprintf(info,"\\n");\par
+   fclose(info);\par
+   printf("wanna see past records press 'y'\\n");\par
+   cha=getch();\par
+   system("cls");\par
+   if(cha=='y')\{\par
+   info=fopen("record.txt","r");\par
+   do\{\par
+       putchar(c=getc(info));\par
+       \}while(c!=EOF);\}\par
+     fclose(info);\par
+\}\par
+int Score()\par
+\{\par
+   int score;\par
+   GotoXY(20,8);\par
+   score=length-5;\par
+   printf("SCORE : %d",(length-5));\par
+   score=length-5;\par
+   GotoXY(50,8);\par
+   printf("Life : %d",life);\par
+   return score;\par
+\}\par
+int Scoreonly()\par
+\{\par
+int score=Score();\par
+system("cls");\par
+return score;\par
+\}\par
+void Up()\par
+\{\par
+   int i;\par
+   for(i=0;i<=(bend[bend_no].y-head.y)&&len<length;i++)\par
+   \{\par
+       GotoXY(head.x,head.y+i);\par
+       \{\par
+           if(len==0)\par
+               printf("^");\par
+           else\par
+               printf("*");\par
+       \}\par
+       body[len].x=head.x;\par
+       body[len].y=head.y+i;\par
+       len++;\par
+   \}\par
+   Bend();\par
+   if(!kbhit())\par
+       head.y--;\par
+\}\par
+}
+ 
